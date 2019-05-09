@@ -41,21 +41,21 @@ namespace Client
 
             try
             {
-                Console.WriteLine("调用{0}服务{1}方法开始...", serviceName, methodName);
+                Console.WriteLine("RealProxy调用{0}服务{1}方法开始...", serviceName, methodName);
                 var argsInfo = new Dictionary<string, object>();
                 for (int i = 0; i < methodCall.ArgCount; i++)
                 {
                     argsInfo.Add(methodCall.GetArgName(i), methodCall.Args[i]);
                 }
-                Console.WriteLine("当前传入参数:{0}", JsonConvert.SerializeObject(argsInfo));
+                Console.WriteLine("RealProxy当前传入参数:{0}", JsonConvert.SerializeObject(argsInfo));
                 var result = methodInfo.Invoke(serviceInfo.Service, methodCall.InArgs);
                 if (result != null)
-                    Console.WriteLine("当前返回值:{0}", JsonConvert.SerializeObject(result));
+                    Console.WriteLine("RealProxy当前返回值:{0}", JsonConvert.SerializeObject(result));
                 return new ReturnMessage(result, null, 0, methodCall.LogicalCallContext, methodCall);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("调用{0}服务{1}方法失败,失败原因：{2}", serviceName, methodName, ex.Message);
+                Console.WriteLine("RealProxy调用{0}服务{1}方法失败,失败原因：{2}", serviceName, methodName, ex.Message);
                 throw ex;
             }
             finally
