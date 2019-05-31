@@ -21,7 +21,6 @@ namespace Client
             ProxyGenerator generator = new ProxyGenerator();
             var interceptor = new CastleServicePorxy<TService>(binding, serviceUrl);
             return (TService)generator.CreateInterfaceProxyWithoutTarget(typeof(TService),interceptor);
-               
         }
     }
 }

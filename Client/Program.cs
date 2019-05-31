@@ -21,28 +21,34 @@ namespace Client
             var calculator = ServiceProxyFactory.CreatePorxy<Server.Service.ICalculator>(binding, serviceUrl);
             for (int i = 0; i < 100; i++)
             {
-                calculator.Add(12, 24);
-                calculator.Subtract(36, 10);
-                calculator.Multiply(12, 35);
-                calculator.Divide(36, 12);
+                //calculator.Add(12, 24);
+                //calculator.Subtract(36, 10);
+                //calculator.Multiply(12, 35);
+                //calculator.Divide(36, 12);
             }
 
-            calculator = ServiceProxyFactory.CreateCastleProxy<Server.Service.ICalculator>(binding, serviceUrl);
-            for(int i = 0; i < 100; i++)
-            {
-                calculator.Add(12, 24);
-                calculator.Subtract(36, 10);
-                calculator.Multiply(12, 35);
-                calculator.Divide(36, 12);
-            }
+            //calculator = ServiceProxyFactory.CreateCastleProxy<Server.Service.ICalculator>(binding, serviceUrl);
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    calculator.Add(12, 24);
+            //    calculator.Subtract(36, 10);
+            //    calculator.Multiply(12, 35);
+            //    calculator.Divide(36, 12);
+            //}
 
 
             serviceUrl = "http://localhost:8502/Message.svc";
             var message = ServiceProxyFactory.CreatePorxy<Server.Service.IMessage>(binding, serviceUrl);
-            message.Echo("小古");
+            //message.Echo("小古");
 
 
 
+            //var serviceProxy = new CalculatorServiceProxy(new CalculatorService());
+            //var calculator = (ICalculator)serviceProxy.GetTransparentProxy();
+            //calculator.Add(12, 24);
+            //calculator.Subtract(36, 10);
+            //calculator.Multiply(12, 35);
+            //calculator.Divide(36, 12);
             Console.ReadKey();
         }
     }

@@ -40,12 +40,13 @@ namespace Client
             try
             {
                 Console.WriteLine("CastleProxy调用{0}服务{1}方法开始...", serviceName, methodName);
-                //var argsInfo = new Dictionary<string, object>();
-                //for (int i = 0; i < invocation.Arguments.Length; i++)
-                //{
-                //    argsInfo.Add(invocation.,invocation.Arguments[i]);
-                //}
-                //Console.WriteLine("当前传入参数:{0}", JsonConvert.SerializeObject(argsInfo));
+                var argsInfo = new Dictionary<string, object>();
+                var parameters = methodInfo.GetParameters();
+                for (int i = 0; i < invocation.Arguments.Length; i++)
+                {
+                    argsInfo.Add(parameters[i].Name, invocation.Arguments[i]);
+                }
+                Console.WriteLine("当前传入参数:{0}", JsonConvert.SerializeObject(argsInfo));
                 var result = methodInfo.Invoke(serviceInfo.Service, invocation.Arguments);
                 if (result != null) { 
                     Console.WriteLine("当前返回值:{0}", JsonConvert.SerializeObject(result));
