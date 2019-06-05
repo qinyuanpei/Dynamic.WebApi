@@ -251,12 +251,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Abp.DynamicWebApi.Core\Abp.DynamicWebApi.Core.csproj">
-      <Project>{17298ea0-af73-4f30-b6f1-2066100d7d74}</Project>
-      <Name>Abp.DynamicWebApi.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text;
 namespace Server.Service
 {
     [ServiceContract]
-    public interface IMessage: IApplicationService
+    public interface IMessage
     {
         [OperationContract]
         void Echo(string receiver);

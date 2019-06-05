@@ -1,5 +1,4 @@
-﻿using Abp.Application.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,7 +9,7 @@ using System.Text;
 namespace Server.Service
 {
     [ServiceContract]
-    public interface ICalculator: IApplicationService
+    public interface ICalculator
     {
         [OperationContract]
         double Add(double n1, double n2);

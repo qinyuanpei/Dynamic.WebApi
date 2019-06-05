@@ -120,13 +120,15 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="DynamciApiInterceptor.cs" />
+    <Compile Include="DynamicHttpActionSelector.cs" />
     <Compile Include="DynamicControllerFactory.cs" />
+    <Compile Include="DynamicHttpControllerActivtor.cs" />
+    <Compile Include="DynamicHttpControllerDescriptor.cs" />
     <Compile Include="DynamicHttpControllerSelector.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceProxyGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -143,7 +145,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Server\Server.csproj">
+    <ProjectReference Include="..\Server\DynamicProxy.Server.csproj">
       <Project>{213cbb24-5b7a-4d40-8900-e60394521743}</Project>
       <Name>Server</Name>
     </ProjectReference>

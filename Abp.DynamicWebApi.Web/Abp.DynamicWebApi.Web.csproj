@@ -3740,10 +3740,6 @@
       <Project>{3979f157-deb0-4878-ab1d-4cef6b5a1300}</Project>
       <Name>Abp.DynamicWebApi.EntityFramework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Abp.DynamicWebApi.WebApi\Abp.DynamicWebApi.WebApi.csproj">
-      <Project>{5eb52d3d-09fd-463a-b02a-8d9856bd3724}</Project>
-      <Name>Abp.DynamicWebApi.WebApi</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
