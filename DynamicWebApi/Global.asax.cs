@@ -36,7 +36,9 @@ namespace DynamicWebApi
 
             var configuration = GlobalConfiguration.Configuration;
             var dynamicControllerSelector = new DynamicHttpControllerSelector(configuration, container);
+            var dynamicHttpControllerActivtor = new DynamicHttpControllerActivtor(container);
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), dynamicControllerSelector);
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), dynamicHttpControllerActivtor);
 
             // 在应用程序启动时运行的代码
             AreaRegistration.RegisterAllAreas();

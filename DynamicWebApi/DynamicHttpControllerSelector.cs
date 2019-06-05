@@ -1,5 +1,6 @@
 ﻿using Castle.Windsor;
 using DynamicWebApi.Controllers;
+using Server.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace DynamicWebApi
             {
                 serviceName = routeData["serviceName"].ToString();
                 var controller = _container.Resolve(serviceName, typeof(BaseController));
-                return new DynamicHttpControllerDescriptor(_configuration, serviceName, controller.GetType());
+                return new DynamicHttpControllerDescriptor(_configuration, serviceName, typeof(BaseController));
             }
 
             return base.SelectController(request);
