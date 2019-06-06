@@ -9,11 +9,11 @@ using System.Web.Http.Results;
 
 namespace DynamicWebApi
 {
-    public class DynamciApiInterceptor<TService> : IInterceptor
+    public class DynamicApiInterceptor<TService> : IInterceptor
     {
         private readonly TService _realObject;
 
-        public DynamciApiInterceptor(TService realObject)
+        public DynamicApiInterceptor(TService realObject)
         {
             _realObject = realObject;
         }

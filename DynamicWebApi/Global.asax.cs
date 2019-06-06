@@ -27,16 +27,16 @@ namespace DynamicWebApi
             container.Register(
                 // 注册ICalculator
                 Component.For<CalculatorService, ICalculator>(),
-                Component.For<DynamciApiInterceptor<ICalculator>>().LifestyleTransient(),
+                Component.For<DynamicApiInterceptor<ICalculator>>().LifestyleTransient(),
                 Component.For<BaseController>().Proxy.AdditionalInterfaces(typeof(ICalculator))
-                    .Interceptors<DynamciApiInterceptor<ICalculator>>().LifestyleTransient()
+                    .Interceptors<DynamicApiInterceptor<ICalculator>>().LifestyleTransient()
                     .Named("Calculator"),
 
                 //注册IMessage
                 Component.For<MessageService, IMessage>(),
-                Component.For<DynamciApiInterceptor<IMessage>>().LifestyleTransient(),
+                Component.For<DynamicApiInterceptor<IMessage>>().LifestyleTransient(),
                 Component.For<BaseController>().Proxy.AdditionalInterfaces(typeof(IMessage))
-                    .Interceptors<DynamciApiInterceptor<IMessage>>().LifestyleTransient()
+                    .Interceptors<DynamicApiInterceptor<IMessage>>().LifestyleTransient()
                     .Named("Message")
 
             );
