@@ -120,6 +120,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="DynamciApiInterceptor.cs" />
+    <Compile Include="DynamicHttpActionDescriptor.cs" />
     <Compile Include="DynamicHttpActionSelector.cs" />
     <Compile Include="DynamicControllerFactory.cs" />
     <Compile Include="DynamicHttpControllerActivtor.cs" />

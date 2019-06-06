@@ -22,7 +22,7 @@ namespace DynamicWebApi
 
             config.Routes.MapHttpRoute(
                 name: "DynamicApi",
-                routeTemplate: "services/{serviceName}/{actionName}",
+                routeTemplate: "services/{ServiceName}/{ActionName}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }

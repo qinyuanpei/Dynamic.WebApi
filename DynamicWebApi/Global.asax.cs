@@ -12,6 +12,7 @@ using Castle.MicroKernel.Registration;
 using DynamicWebApi.Controllers;
 using System.Web.Http.Dispatcher;
 using Server.Service;
+using System.Web.Http.Controllers;
 
 namespace DynamicWebApi
 {
@@ -24,11 +25,20 @@ namespace DynamicWebApi
 
             //通过Castle组合BaseController和ICalculator接口
             container.Register(
+                // 注册ICalculator
                 Component.For<CalculatorService, ICalculator>(),
                 Component.For<DynamciApiInterceptor<ICalculator>>().LifestyleTransient(),
                 Component.For<BaseController>().Proxy.AdditionalInterfaces(typeof(ICalculator))
                     .Interceptors<DynamciApiInterceptor<ICalculator>>().LifestyleTransient()
-                    .Named("Calculator")
+                    .Named("Calculator"),
+
+                //注册IMessage
+                Component.For<MessageService, IMessage>(),
+                Component.For<DynamciApiInterceptor<IMessage>>().LifestyleTransient(),
+                Component.For<BaseController>().Proxy.AdditionalInterfaces(typeof(IMessage))
+                    .Interceptors<DynamciApiInterceptor<IMessage>>().LifestyleTransient()
+                    .Named("Message")
+
             );
 
             //var dynamicControllerFactory = new DynamicControllerFactory(container);
@@ -37,7 +47,9 @@ namespace DynamicWebApi
             var configuration = GlobalConfiguration.Configuration;
             var dynamicControllerSelector = new DynamicHttpControllerSelector(configuration, container);
             var dynamicHttpControllerActivtor = new DynamicHttpControllerActivtor(container);
+            var dynamicActionSelector = new DynamicHttpActionSelector();
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), dynamicControllerSelector);
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), dynamicActionSelector);
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), dynamicHttpControllerActivtor);
 
             // 在应用程序启动时运行的代码

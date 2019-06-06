@@ -30,12 +30,18 @@ namespace DynamicWebApi
         public override HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
             var routeData = request.GetRouteData().Values;
-            var serviceName = string.Empty;
-            if (routeData.ContainsKey("serviceName"))
+            if (routeData.ContainsKey("ServiceName") && routeData.ContainsKey("ActionName"))
             {
-                serviceName = routeData["serviceName"].ToString();
+                var serviceName = routeData["ServiceName"].ToString();
+                var actionName = routeData["ActionName"].ToString();
                 var controller = _container.Resolve(serviceName, typeof(BaseController));
-                return new DynamicHttpControllerDescriptor(_configuration, serviceName, typeof(BaseController));
+                var controllerType = controller.GetType();
+                var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, serviceName, typeof(BaseController));
+                controllerDescriptor.Properties["ServiceName"] = serviceName;
+                controllerDescriptor.Properties["ActionName"] = actionName;
+                controllerDescriptor.Properties["IsDynamicController"] = true;
+                controllerDescriptor.Properties["ControllerType"] = controllerType;
+                return controllerDescriptor; ;
             }
 
             return base.SelectController(request);
