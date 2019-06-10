@@ -19,6 +19,9 @@ namespace DynamicWebApi
                 {
                     var actionName = controllerContext.ControllerDescriptor.Properties["ActionName"].ToString();
                     var methodInfo = ((Type)controllerType).GetMethod(actionName);
+                    if (methodInfo == null)
+                        return base.SelectAction(controllerContext);
+
                     return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, methodInfo);
                 }
             }

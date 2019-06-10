@@ -24,7 +24,9 @@ namespace DynamicWebApi
             {
                 try
                 {
-                    invocation.ReturnValue = invocation.Method.Invoke(_realObject, invocation.Arguments);
+                    var result = invocation.Method.Invoke(_realObject, invocation.Arguments);
+                    if (result != null)
+                        invocation.ReturnValue = result;
                 }
                 catch (TargetInvocationException targetInvocation)
                 {
