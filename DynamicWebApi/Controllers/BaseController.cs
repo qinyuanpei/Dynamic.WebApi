@@ -10,7 +10,7 @@ using System.Web.Http.Controllers;
 
 namespace DynamicWebApi.Controllers
 {
-    public class BaseController : ApiController 
+    public class BaseController<T> : ApiController 
     {
         public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
         {

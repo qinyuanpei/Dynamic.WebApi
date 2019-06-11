@@ -12,14 +12,14 @@ namespace Server.Service
     public interface IMessage
     {
         [OperationContract]
-        void Echo(string receiver);
+        string Echo(string receiver);
     }
 
     public class MessageService : IMessage
     {
-        public void Echo(string receiver)
+        public string Echo(string receiver)
         {
-            Console.WriteLine($"Hello, {receiver}");
+            return $"Hello, {receiver}";
         }
     }
 }

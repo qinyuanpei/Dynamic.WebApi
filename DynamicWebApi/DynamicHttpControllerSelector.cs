@@ -35,17 +35,24 @@ namespace DynamicWebApi
                 var serviceName = routeData["ServiceName"].ToString();
                 var actionName = routeData["ActionName"].ToString();
 
-                var controller = _container.Resolve(serviceName, typeof(BaseController));
-                if (controller == null)
-                    return base.SelectController(request);
+                if (DynamicHttpControllerManager.ContainsService(serviceName))
+                {
+                    var controllerInfo = DynamicHttpControllerManager.GetControllerInfo(serviceName);
+                    var controller = _container.Resolve(serviceName, controllerInfo.ControllerType);
+                    if (controller == null)
+                        return base.SelectController(request);
 
-                var controllerType = controller.GetType();
-                var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, serviceName, typeof(BaseController));
-                controllerDescriptor.Properties["ServiceName"] = serviceName;
-                controllerDescriptor.Properties["ActionName"] = actionName;
-                controllerDescriptor.Properties["IsDynamicController"] = true;
-                controllerDescriptor.Properties["ControllerType"] = controllerType;
-                return controllerDescriptor; ;
+                    var controllerType = controller.GetType();
+                    var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, serviceName, controllerInfo.ControllerType);
+                    controllerDescriptor.Properties["ServiceName"] = serviceName;
+                    controllerDescriptor.Properties["ActionName"] = actionName;
+                    controllerDescriptor.Properties["IsDynamicController"] = true;
+                    controllerDescriptor.Properties["ControllerType"] = controllerType;
+                    return controllerDescriptor;
+                }
+                
+
+                
             }
 
             return base.SelectController(request);

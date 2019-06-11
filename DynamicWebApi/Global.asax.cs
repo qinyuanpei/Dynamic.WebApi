@@ -24,22 +24,25 @@ namespace DynamicWebApi
             var container = new Castle.Windsor.WindsorContainer();
 
             //通过Castle组合BaseController和ICalculator接口
-            container.Register(
-                // 注册ICalculator
-                Component.For<CalculatorService, ICalculator>(),
-                Component.For<DynamicApiInterceptor<ICalculator>>().LifestyleTransient(),
-                Component.For<BaseController>().Proxy.AdditionalInterfaces(typeof(ICalculator))
-                    .Interceptors<DynamicApiInterceptor<ICalculator>>().LifestyleTransient()
-                    .Named("Calculator"),
+            var controllerManager = new DynamicHttpControllerManager(container);
+            controllerManager.RegisterType<CalculatorService, ICalculator>();
+            controllerManager.RegisterType<MessageService, IMessage>();
+            //container.Register(
+            //    // 注册ICalculator
+            //    Component.For<CalculatorService, ICalculator>(),
+            //    Component.For<DynamicApiInterceptor<ICalculator>>().LifestyleTransient(),
+            //    Component.For<BaseController>().Proxy.AdditionalInterfaces(typeof(ICalculator))
+            //        .Interceptors<DynamicApiInterceptor<ICalculator>>().LifestyleTransient()
+            //        .Named("Calculator"),
 
-                //注册IMessage
-                Component.For<MessageService, IMessage>(),
-                Component.For<DynamicApiInterceptor<IMessage>>().LifestyleTransient(),
-                Component.For<BaseController>().Proxy.AdditionalInterfaces(typeof(IMessage))
-                    .Interceptors<DynamicApiInterceptor<IMessage>>().LifestyleTransient()
-                    .Named("Message")
+            //    //注册IMessage
+            //    Component.For<MessageService, IMessage>(),
+            //    Component.For<DynamicApiInterceptor<IMessage>>().LifestyleTransient(),
+            //    Component.For<BaseController>().Proxy.AdditionalInterfaces(typeof(IMessage))
+            //        .Interceptors<DynamicApiInterceptor<IMessage>>().LifestyleTransient()
+            //        .Named("Message")
 
-            );
+            //);
 
             //var dynamicControllerFactory = new DynamicControllerFactory(container);
             //ControllerBuilder.Current.SetControllerFactory(dynamicControllerFactory);
