@@ -44,12 +44,10 @@ namespace DynamicWebApi
                     controllerDescriptor.Properties["ServiceName"] = serviceName;
                     controllerDescriptor.Properties["ActionName"] = actionName;
                     controllerDescriptor.Properties["IsDynamicController"] = true;
-                    controllerDescriptor.Properties["ControllerType"] = controllerInfo.ControllerType;
+                    controllerDescriptor.Properties["ControllerType"] = controller.GetType();
                     return controllerDescriptor;
                 }
-                
-
-                
+                 
             }
 
             return base.SelectController(request);
