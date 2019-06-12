@@ -14,16 +14,14 @@ namespace DynamicWebApi
 {
     public class DynamicHttpControllerSelector: DefaultHttpControllerSelector
     {
-        private IWindsorContainer _container;
         private HttpConfiguration _configuration;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="configuration"></param>
-        public DynamicHttpControllerSelector(HttpConfiguration configuration, IWindsorContainer container) :
+        public DynamicHttpControllerSelector(HttpConfiguration configuration) :
             base(configuration)
         {
-            _container = container;
             _configuration = configuration;
         }
 
@@ -35,19 +33,18 @@ namespace DynamicWebApi
                 var serviceName = routeData["ServiceName"].ToString();
                 var actionName = routeData["ActionName"].ToString();
 
-                if (DynamicHttpControllerManager.ContainsService(serviceName))
+                if (DynamicHttpControllerManager.GetInstance().ContainsService(serviceName))
                 {
-                    var controllerInfo = DynamicHttpControllerManager.GetControllerInfo(serviceName);
-                    var controller = _container.Resolve(serviceName, controllerInfo.ControllerType);
+                    var controllerInfo = DynamicHttpControllerManager.GetInstance().GetControllerInfo(serviceName);
+                    var controller = DynamicHttpControllerManager.GetInstance().Resolve(serviceName);
                     if (controller == null)
                         return base.SelectController(request);
 
-                    var controllerType = controller.GetType();
                     var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, serviceName, controllerInfo.ControllerType);
                     controllerDescriptor.Properties["ServiceName"] = serviceName;
                     controllerDescriptor.Properties["ActionName"] = actionName;
                     controllerDescriptor.Properties["IsDynamicController"] = true;
-                    controllerDescriptor.Properties["ControllerType"] = controllerType;
+                    controllerDescriptor.Properties["ControllerType"] = controllerInfo.ControllerType;
                     return controllerDescriptor;
                 }
                 

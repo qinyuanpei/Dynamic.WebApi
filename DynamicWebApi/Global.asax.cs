@@ -24,9 +24,8 @@ namespace DynamicWebApi
             var container = new Castle.Windsor.WindsorContainer();
 
             //通过Castle组合BaseController和ICalculator接口
-            var controllerManager = new DynamicHttpControllerManager(container);
-            controllerManager.RegisterType<CalculatorService, ICalculator>();
-            controllerManager.RegisterType<MessageService, IMessage>();
+            DynamicHttpControllerManager.GetInstance().RegisterType<CalculatorService, ICalculator>();
+            DynamicHttpControllerManager.GetInstance().RegisterType<MessageService, IMessage>();
             //container.Register(
             //    // 注册ICalculator
             //    Component.For<CalculatorService, ICalculator>(),
@@ -48,8 +47,8 @@ namespace DynamicWebApi
             //ControllerBuilder.Current.SetControllerFactory(dynamicControllerFactory);
 
             var configuration = GlobalConfiguration.Configuration;
-            var dynamicControllerSelector = new DynamicHttpControllerSelector(configuration, container);
-            var dynamicHttpControllerActivtor = new DynamicHttpControllerActivtor(container);
+            var dynamicControllerSelector = new DynamicHttpControllerSelector(configuration);
+            var dynamicHttpControllerActivtor = new DynamicHttpControllerActivtor();
             var dynamicActionSelector = new DynamicHttpActionSelector();
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), dynamicControllerSelector);
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), dynamicActionSelector);

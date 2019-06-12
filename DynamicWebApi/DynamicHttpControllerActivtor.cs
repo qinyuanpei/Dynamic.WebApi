@@ -11,15 +11,9 @@ namespace DynamicWebApi
 {
     public class DynamicHttpControllerActivtor : IHttpControllerActivator
     {
-        private IWindsorContainer _container;
-        public DynamicHttpControllerActivtor(IWindsorContainer container)
-        {
-            _container = container;
-
-        }
         public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
         {
-            return (IHttpController)_container.Resolve(controllerType);
+            return (IHttpController)DynamicHttpControllerManager.GetInstance().Resolve(controllerType);
         }
     }
 }
