@@ -44,6 +44,7 @@ namespace DynamicWebApi
                     controllerDescriptor.Properties["ServiceName"] = serviceName;
                     controllerDescriptor.Properties["ActionName"] = actionName;
                     controllerDescriptor.Properties["IsDynamicController"] = true;
+                    controllerDescriptor.Properties["ServiceType"] = controllerInfo.ServiceType;
                     controllerDescriptor.Properties["ControllerType"] = controller.GetType();
                     return controllerDescriptor;
                 }
