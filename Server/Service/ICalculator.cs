@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Web;
+using System.Web.Http;
 
 namespace Server.Service
 {
@@ -24,21 +25,25 @@ namespace Server.Service
 
     public class CalculatorService : ICalculator
     {
+        [HttpGet]
         public double Add(double n1, double n2)
         {
             return n1 + n2;
         }
 
+        [HttpGet]
         public double Subtract(double n1, double n2)
         {
             return n1 - n2;
         }
 
+        [HttpGet]
         public double Multiply(double n1, double n2)
         {
             return n1 * n2;
         }
 
+        [HttpGet]
         public double Divide(double n1, double n2)
         {
             return n1 / n2;

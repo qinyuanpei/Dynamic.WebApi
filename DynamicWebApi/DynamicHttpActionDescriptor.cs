@@ -30,59 +30,16 @@ namespace DynamicWebApi
 
                 if (httpVerbAttributes.Any())
                 {
-                    //根据HttpGet/HttpPost/HttpPut/HttpDelete标签
+                    //根据路由来获取Http动词
                     if (httpVerbAttributes.Count > 1)
                         throw new Exception($"Multiple http verb matched in method {methodInfo.Name} of {((Type)serviceType).Name}");
 
-                    var httpVerb = httpVerbAttributes.FirstOrDefault().GetType().Name;
-                    switch (httpVerb)
-                    {
-                        case "HttpGetAttribute":
-                            _httpVerbs.Add(HttpMethod.Get);
-                            break;
-                        case "HttpPostAttribute":
-                            _httpVerbs.Add(HttpMethod.Post);
-                            break;
-                        case "HttpPutAttribute":
-                            _httpVerbs.Add(HttpMethod.Put);
-                            break;
-                        case "HttpDeleteAttribute":
-                            _httpVerbs.Add(HttpMethod.Delete);
-                            break;
-                    }
+                    _httpVerbs = GetHttpVerbByRoute(httpVerbAttributes);
                 }
                 else
                 {
-                    //根据方法名称
-                    var methodName = methodInfo.Name;
-                    if (methodName.StartsWith("Get"))
-                    {
-                        _httpVerbs.Add(HttpMethod.Get);
-                    }
-                    else if (methodName.StartsWith("Create"))
-                    {
-                        _httpVerbs.Add(HttpMethod.Get);
-                    }
-                    else if (methodName.StartsWith("Update"))
-                    {
-                        _httpVerbs.Add(HttpMethod.Put);
-                    }
-                    else if (methodName.StartsWith("Delete"))
-                    {
-                        _httpVerbs.Add(HttpMethod.Delete);
-                    }
-                    else
-                    {
-                        var arguments = methodInfo.GetParameters();
-                        if (arguments.Any(arg => !arg.GetType().IsValueType))
-                        {
-                            _httpVerbs.Add(HttpMethod.Post);
-                        }
-                        else
-                        {
-                            _httpVerbs.Add(HttpMethod.Post);
-                        }
-                    }
+                    //根据方法名称获取Http动词
+                    _httpVerbs = GetHttpVerbByMethod(methodInfo);
 
                 }
             }
@@ -131,14 +88,66 @@ namespace DynamicWebApi
                        });
         }
 
-        private Collection<HttpMethod> GetHttpVerbByRoute()
+        private Collection<HttpMethod> GetHttpVerbByRoute(List<Attribute> httpVerbAttributes)
         {
-            return null;
+            var httpVerbs = new Collection<HttpMethod>();
+
+            var httpVerb = httpVerbAttributes.FirstOrDefault().GetType().Name;
+            switch (httpVerb)
+            {
+                case "HttpGetAttribute":
+                    httpVerbs.Add(HttpMethod.Get);
+                    break;
+                case "HttpPostAttribute":
+                    httpVerbs.Add(HttpMethod.Post);
+                    break;
+                case "HttpPutAttribute":
+                    httpVerbs.Add(HttpMethod.Put);
+                    break;
+                case "HttpDeleteAttribute":
+                    httpVerbs.Add(HttpMethod.Delete);
+                    break;
+            }
+
+            return httpVerbs;
         }
 
-        private Collection<HttpMethod> GetHttpVerbByMethod()
+        private Collection<HttpMethod> GetHttpVerbByMethod(MethodInfo methodInfo)
         {
-            return null;
+            var httpVerbs = new Collection<HttpMethod>();
+
+            //根据方法名称
+            var methodName = methodInfo.Name;
+            if (methodName.StartsWith("Get"))
+            {
+                httpVerbs.Add(HttpMethod.Get);
+            }
+            else if (methodName.StartsWith("Create"))
+            {
+                httpVerbs.Add(HttpMethod.Get);
+            }
+            else if (methodName.StartsWith("Update"))
+            {
+                httpVerbs.Add(HttpMethod.Put);
+            }
+            else if (methodName.StartsWith("Delete"))
+            {
+                httpVerbs.Add(HttpMethod.Delete);
+            }
+            else
+            {
+                var arguments = methodInfo.GetParameters();
+                if (arguments.Any(arg => !arg.GetType().IsValueType))
+                {
+                    httpVerbs.Add(HttpMethod.Post);
+                }
+                else
+                {
+                    httpVerbs.Add(HttpMethod.Post);
+                }
+            }
+
+            return httpVerbs;
         }
     }
 }
