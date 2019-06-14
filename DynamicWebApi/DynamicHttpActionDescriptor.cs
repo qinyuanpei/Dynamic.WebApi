@@ -107,9 +107,38 @@ namespace DynamicWebApi
 
         public override Task<object> ExecuteAsync(HttpControllerContext controllerContext, IDictionary<string, object> arguments, CancellationToken cancellationToken)
         {
+            return base.ExecuteAsync(controllerContext, arguments, cancellationToken)
+                       .ContinueWith(task =>
+                       {
+                           try
+                           {
+                               if (task.Result == null)
+                               {
+                                   return new DynamicApiResult() { Flag = true };
+                               }
 
-            return 
-                base.ExecuteAsync(controllerContext, arguments, cancellationToken);
+                               if (task.Result is DynamicApiResult)
+                               {
+                                   return task.Result;
+                               }
+
+                               return new DynamicApiResult() { Flag = true, Result = task.Result };
+                           }
+                           catch (AggregateException ex)
+                           {
+                               throw ex;
+                           }
+                       });
+        }
+
+        private Collection<HttpMethod> GetHttpVerbByRoute()
+        {
+            return null;
+        }
+
+        private Collection<HttpMethod> GetHttpVerbByMethod()
+        {
+            return null;
         }
     }
 }

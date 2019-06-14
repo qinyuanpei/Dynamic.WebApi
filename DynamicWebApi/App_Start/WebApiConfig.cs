@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 
 namespace DynamicWebApi
@@ -25,6 +26,9 @@ namespace DynamicWebApi
                 routeTemplate: "services/{ServiceName}/{ActionName}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Formatters.Clear();
+            config.Formatters.Add(new JsonMediaTypeFormatter() );
         }
     }
 }
