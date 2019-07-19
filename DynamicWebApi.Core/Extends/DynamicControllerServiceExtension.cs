@@ -32,7 +32,7 @@ namespace DynamicWebApi.Core.Extends
         {
             var service = services.FirstOrDefault(s => s.ServiceType == typeof(TService));
             if (service != null)
-                return service as TService;
+                return service.ImplementationInstance as TService;
 
             return null;
         }
