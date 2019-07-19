@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DynamicWebApi.Core.Services
 {
+    [DynamicController]
     public class CalculateService : IDynamicController
     {
         [HttpGet]

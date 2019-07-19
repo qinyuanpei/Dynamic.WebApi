@@ -85,7 +85,8 @@ namespace DynamicWebApi.Core.Extends
             {
                 action.Selectors.ToList().ForEach(selector =>
                 {
-                    var routeModel = new AttributeRouteModel(new RouteAttribute($"api/{areaName}/{controllerName}/{action.ActionName}"));
+                    var routePath = $"api/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
+                    var routeModel = new AttributeRouteModel(new RouteAttribute(routePath));
                     selector.AttributeRouteModel = selector.AttributeRouteModel == null ?
                         routeModel : AttributeRouteModel.CombineAttributeRouteModel(routeModel, selector.AttributeRouteModel);
                 });
@@ -108,7 +109,10 @@ namespace DynamicWebApi.Core.Extends
                 if(type.IsPrimitive || type.IsEnum || 
                     (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)))
                 {
-                    parameter.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
+                    if (IsFromBodyEnable(action, parameter))
+                    {
+                        parameter.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
+                    }
                 }
             }
         }
@@ -121,7 +125,8 @@ namespace DynamicWebApi.Core.Extends
             if (routeAttributes != null && routeAttributes.Any())
             {
                 var httpVerbs = routeAttributes.SelectMany(s => (s as HttpMethodAttribute).HttpMethods).ToList().Distinct();
-                selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute($"api/{areaName}/{controllerName}/{actionName}"));
+                var routePath = $"api/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
+                selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(routePath));
                 selectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(httpVerbs));
                 return selectorModel;
             }
@@ -145,7 +150,8 @@ namespace DynamicWebApi.Core.Extends
                 {
                     httpVerb = "DELETE";
                 }
-                selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute($"api/{areaName}/{controllerName}/{actionName}"));
+                var routePath = $"api/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
+                selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(routePath));
                 selectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { httpVerb }));
                 return selectorModel;
             }
