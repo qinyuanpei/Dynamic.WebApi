@@ -10,17 +10,17 @@ namespace Client
 {
     public static class ServiceProxyFactory
     {
-        public static TService CreatePorxy<TService>(Binding binding, string serviceUrl)
-        {
-            var dynamicProxy = new DynamicServiceProxy<TService>(binding, serviceUrl);
-            return (TService)dynamicProxy.GetTransparentProxy();
-        }
+        //public static TService CreatePorxy<TService>(Binding binding, string serviceUrl)
+        //{
+        //    var dynamicProxy = new DynamicServiceProxy<TService>(binding, serviceUrl);
+        //    return (TService)dynamicProxy.GetTransparentProxy();
+        //}
 
-        public static TService CreateCastleProxy<TService>(Binding binding, string serviceUrl) 
-        {
-            ProxyGenerator generator = new ProxyGenerator();
-            var interceptor = new CastleServicePorxy<TService>(binding, serviceUrl);
-            return (TService)generator.CreateInterfaceProxyWithoutTarget(typeof(TService),interceptor);
-        }
+        //public static TService CreateCastleProxy<TService>(Binding binding, string serviceUrl) 
+        //{
+        //    ProxyGenerator generator = new ProxyGenerator();
+        //    var interceptor = new CastleServicePorxy<TService>(binding, serviceUrl);
+        //    return (TService)generator.CreateInterfaceProxyWithoutTarget(typeof(TService),interceptor);
+        //}
     }
 }

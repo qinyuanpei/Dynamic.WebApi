@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicProxy.Client", "Client\DynamicProxy.Client.csproj", "{9073F0E9-CEC6-4974-AE64-F2D32C8B1D32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicProxy.Server", "Server\DynamicProxy.Server.csproj", "{213CBB24-5B7A-4D40-8900-E60394521743}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicWebApi", "DynamicWebApi\DynamicWebApi.csproj", "{B8093BFA-0644-415D-99DF-0EF054ECCF00}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicWebApi.Core", "DynamicWebApi.Core\DynamicWebApi.Core.csproj", "{5E3A9F54-DA97-4209-8D25-1FD29EA84F85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +29,15 @@ Global
 		{B8093BFA-0644-415D-99DF-0EF054ECCF00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8093BFA-0644-415D-99DF-0EF054ECCF00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8093BFA-0644-415D-99DF-0EF054ECCF00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E3A9F54-DA97-4209-8D25-1FD29EA84F85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E3A9F54-DA97-4209-8D25-1FD29EA84F85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E3A9F54-DA97-4209-8D25-1FD29EA84F85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E3A9F54-DA97-4209-8D25-1FD29EA84F85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61DD6C1E-987A-4F1C-9C56-9DA5FFEBD30B}
 	EndGlobalSection
 EndGlobal
