@@ -10,9 +10,8 @@ namespace DynamicWebApi.Core.Extends
 {
     public static class DynamicControllerServiceExtension
     {
-        public static IServiceCollection AddDyanmicController(this IServiceCollection services)
+        public static IServiceCollection AddDyanmicController(this IServiceCollection services, DynamicControllerOptions options = null)
         {
-
             var partManager = services.GetService<ApplicationPartManager>();
             if (partManager == null)
             {
@@ -20,6 +19,8 @@ namespace DynamicWebApi.Core.Extends
             }
 
             partManager.FeatureProviders.Add(new DynamicControllerFeatureProvider());
+            if (options == null) options = DynamicControllerOptions.Default;
+            services.AddSingleton(typeof(DynamicControllerOptions), options);
             services.Configure<MvcOptions>(o =>
             {
                 o.Conventions.Add(new DynamicControllerConvention(services));

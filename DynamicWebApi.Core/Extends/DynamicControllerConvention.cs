@@ -15,9 +15,11 @@ namespace DynamicWebApi.Core.Extends
     public class DynamicControllerConvention : IApplicationModelConvention
     {
         private readonly IServiceCollection _serviceCollection;
+        private readonly DynamicControllerOptions _dynamicControllerOptions;
         public DynamicControllerConvention(IServiceCollection serviceCollection)
         {
             _serviceCollection = serviceCollection;
+            _dynamicControllerOptions = serviceCollection.GetService<DynamicControllerOptions>();
         }
 
         public void Apply(ApplicationModel application)
@@ -85,7 +87,7 @@ namespace DynamicWebApi.Core.Extends
             {
                 action.Selectors.ToList().ForEach(selector =>
                 {
-                    var routePath = $"api/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
+                    var routePath = $"{_dynamicControllerOptions.DefaultApiRoutePrefix}/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
                     var routeModel = new AttributeRouteModel(new RouteAttribute(routePath));
                     selector.AttributeRouteModel = selector.AttributeRouteModel == null ?
                         routeModel : AttributeRouteModel.CombineAttributeRouteModel(routeModel, selector.AttributeRouteModel);
@@ -106,7 +108,7 @@ namespace DynamicWebApi.Core.Extends
                     continue;
 
                 var type = parameter.ParameterInfo.ParameterType;
-                if(type.IsPrimitive || type.IsEnum || 
+                if (type.IsPrimitive || type.IsEnum ||
                     (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)))
                 {
                     if (IsFromBodyEnable(action, parameter))
@@ -125,7 +127,7 @@ namespace DynamicWebApi.Core.Extends
             if (routeAttributes != null && routeAttributes.Any())
             {
                 var httpVerbs = routeAttributes.SelectMany(s => (s as HttpMethodAttribute).HttpMethods).ToList().Distinct();
-                var routePath = $"api/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
+                var routePath = $"{_dynamicControllerOptions.DefaultApiRoutePrefix}/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
                 selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(routePath));
                 selectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(httpVerbs));
                 return selectorModel;

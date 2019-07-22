@@ -11,7 +11,7 @@ namespace DynamicWebApi.Core.Services
     public class CalculateService : IDynamicController
     {
         [HttpGet]
-        [Route("Calculator/Sum")]
+        [HttpGet,Route("Calculator/Sum")]
         public double Add(double n1, double n2)
         {
             return n1 + n2;
