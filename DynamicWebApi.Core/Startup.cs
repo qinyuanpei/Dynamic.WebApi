@@ -44,6 +44,8 @@ namespace DynamicWebApi.Core
                     Version = "1.0",
                 });
 
+                swagger.DocInclusionPredicate((docName, description) => true);
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 swagger.IncludeXmlComments(xmlPath);
