@@ -14,8 +14,20 @@ namespace DynamicWebApi.Core.Extends
 {
     public class DynamicControllerConvention : IApplicationModelConvention
     {
+        /// <summary>
+        /// ServiceCollection
+        /// </summary>
         private readonly IServiceCollection _serviceCollection;
+
+        /// <summary>
+        /// DynamicControllerOptions
+        /// </summary>
         private readonly DynamicControllerOptions _dynamicControllerOptions;
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="serviceCollection">ServiceCollection</param>
         public DynamicControllerConvention(IServiceCollection serviceCollection)
         {
             _serviceCollection = serviceCollection;
@@ -85,13 +97,14 @@ namespace DynamicWebApi.Core.Extends
             }
             else
             {
+                if (_dynamicControllerOptions.UseCustomRouteFirst) return;
                 action.Selectors.ToList().ForEach(selector =>
                 {
                     var routePath = $"{_dynamicControllerOptions.DefaultApiRoutePrefix}/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
                     var routeModel = new AttributeRouteModel(new RouteAttribute(routePath));
-                    selector.AttributeRouteModel = selector.AttributeRouteModel == null ?
-                        routeModel : AttributeRouteModel.CombineAttributeRouteModel(routeModel, selector.AttributeRouteModel);
+                    selector.AttributeRouteModel = routeModel;
                 });
+
             }
         }
 
