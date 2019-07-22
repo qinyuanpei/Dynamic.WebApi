@@ -18,9 +18,19 @@ namespace DynamicWebApi.Core.Extends
         public bool UseRestfulActionName { get; set; } = true;
 
         /// <summary>
+        /// 是否使用友好的控制器名称
+        /// </summary>
+        public bool UseFriendlyControllerName { get; set; } = true;
+
+        /// <summary>
         /// 默认Api路由名称前缀
         /// </summary>
         public string DefaultApiRoutePrefix { get; set; } = "api";
+
+        /// <summary>
+        /// 默认删除的控制器名称后缀
+        /// </summary>
+        public string[] RemoveControllerSuffix { get; set; } = new string[] { "Controller", "Service", "AppService" };
 
         /// <summary>
         /// 默认配置

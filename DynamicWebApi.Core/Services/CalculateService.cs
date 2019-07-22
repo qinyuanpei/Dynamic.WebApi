@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 namespace DynamicWebApi.Core.Services
 {
     [DynamicController]
-    public class CalculateService : IDynamicController
+    public class CoreCalculatorService : IDynamicController
     {
         [HttpGet]
-        [Route("Calculator/Sum")]
         public double Add(double n1, double n2)
         {
             return n1 + n2;

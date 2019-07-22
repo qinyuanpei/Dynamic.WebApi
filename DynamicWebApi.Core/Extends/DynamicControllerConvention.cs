@@ -71,6 +71,13 @@ namespace DynamicWebApi.Core.Extends
 
         private void ConfigureSelector(ControllerModel controller, DynamicControllerAttribute controllerAttribute)
         {
+            if (_dynamicControllerOptions.UseFriendlyControllerName)
+            {
+                var suffixsToRemove = _dynamicControllerOptions.RemoveControllerSuffix;
+                if (suffixsToRemove != null && suffixsToRemove.Any())
+                    suffixsToRemove.ToList().ForEach(suffix => controller.ControllerName = controller.ControllerName.Replace(suffix, ""));
+            }
+
             controller.Selectors.ToList().RemoveAll(selector =>
                 selector.AttributeRouteModel == null && (selector.ActionConstraints == null || !selector.ActionConstraints.Any())
             );
@@ -97,12 +104,12 @@ namespace DynamicWebApi.Core.Extends
             }
             else
             {
-                if (_dynamicControllerOptions.UseCustomRouteFirst) return;
                 action.Selectors.ToList().ForEach(selector =>
                 {
                     var routePath = $"{_dynamicControllerOptions.DefaultApiRoutePrefix}/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
                     var routeModel = new AttributeRouteModel(new RouteAttribute(routePath));
-                    selector.AttributeRouteModel = routeModel;
+                    if (selector.AttributeRouteModel == null || !_dynamicControllerOptions.UseCustomRouteFirst)
+                        selector.AttributeRouteModel = routeModel;
                 });
 
             }
