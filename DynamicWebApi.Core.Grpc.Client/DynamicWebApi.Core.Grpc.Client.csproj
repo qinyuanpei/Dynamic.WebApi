@@ -17,4 +17,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Update="Protos/user.proto" GrpcServices="Server" />
+  </ItemGroup>
 </Project>

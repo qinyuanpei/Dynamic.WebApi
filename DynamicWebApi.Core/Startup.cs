@@ -53,7 +53,7 @@ namespace DynamicWebApi.Core
             });
 
             services.AddDyanmicController();
-            services.AddGrpcServer(new GrpcServerOptions() { Host = "localhost", Port = 5000 })
+            services.AddGrpcServer()
                 .AddGrpcService();
         }
 

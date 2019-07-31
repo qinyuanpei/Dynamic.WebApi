@@ -11,11 +11,14 @@ namespace DynamicWebApi.Core.Extends
 {
     public static class GrpcServerExtension
     {
-        public static IServiceCollection AddGrpcServer(this IServiceCollection serviceCollection,GrpcServerOptions options)
+        public static IServiceCollection AddGrpcServer(this IServiceCollection serviceCollection)
         {
-            var server = new Server();
-            server.Ports.Add(new ServerPort(options.Host, options.Port, ServerCredentials.Insecure));
+            var server = new Server(new[] { new ChannelOption(ChannelOptions.SoReuseport, 5000) });
+            var serverPort = new ServerPort("127.0.0.1", 5000, ServerCredentials.Insecure);
+            server.Ports.Add(serverPort);
             serviceCollection.AddSingleton(typeof(Server), server);
+            var channel = new Channel(host: serverPort.Host, port: serverPort.Port, credentials: ChannelCredentials.Insecure);
+            serviceCollection.AddSingleton(typeof(Channel), channel);
             return serviceCollection;
         }
 

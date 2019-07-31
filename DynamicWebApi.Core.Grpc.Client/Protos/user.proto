@@ -1,0 +1,32 @@
+﻿syntax = "proto3";
+
+//The namespace of csharp code
+//option csharp_namespace = "UserGrpc"
+
+package UserGrpc;
+
+// The greeting service definition.
+service UserGrpcService {
+  // Sends a greeting
+  rpc SaveUser (UserGrpcEdit) returns (RpcResponse);
+  rpc GetUser (UserGrpcQuery) returns (UserGrpcEdit);
+}
+
+// The request message containing the user's name.
+message UserGrpcEdit {
+  int32 uid = 1;
+  string name = 2;
+  int32 gender = 3;
+  string emial = 4;
+  string mobile = 5;
+}
+
+message UserGrpcQuery {
+   int32 uid = 1;
+}
+
+// The response message containing the greetings.
+message RpcResponse {
+  string code = 1;
+  string message = 2;
+}
