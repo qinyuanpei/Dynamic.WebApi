@@ -12,13 +12,21 @@
     <Compile Remove="Services\CalculatorService.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Protobuf Include="Protos/*.proto" GrpcServices="Server" />
+  </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.9.0" />
     <PackageReference Include="Grpc.Core" Version="1.22.0" />
+    <PackageReference Include="Grpc.Tools" Version="1.22.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Net.Compilers" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Grpc.Tools" Version="1.22.0" PrivateAssets="All" />
   </ItemGroup>
-
 </Project>

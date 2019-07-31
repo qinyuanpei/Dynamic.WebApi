@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DynamicWebApi.Core.Extends;
 using System.IO;
 using System.Reflection;
+using DynamicWebApi.Core.Services;
 
 namespace DynamicWebApi.Core
 {
@@ -52,6 +53,8 @@ namespace DynamicWebApi.Core
             });
 
             services.AddDyanmicController();
+            services.AddGrpcServer(new GrpcServerOptions() { Host = "localhost", Port = 5000 })
+                .AddGrpcService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +85,7 @@ namespace DynamicWebApi.Core
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseGrpcServer();
         }
     }
 }
