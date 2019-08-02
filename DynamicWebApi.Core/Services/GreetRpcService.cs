@@ -4,13 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using DynamicWebApi.Core.Extends;
-using GreetGrpc;
+using DynamicWebApi.Core.Services.Rpc.Greet;
 
 namespace DynamicWebApi.Core.Services
 {
-    [GrpcServiceBind(typeof(GreetGrpc.GreeterGrpcService))]
-    public class GreeterService : GreetGrpc.GreeterGrpcService.GreeterGrpcServiceBase
+    /// <summary>
+    /// GreetService
+    /// </summary>
+    [GrpcServiceBind(typeof(IGreetRpcService))]
+    public class GreetRpcService : IGreetRpcService.IGreetRpcServiceBase
     {
+        /// <summary>
+        /// SayHello
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override Task<HelloReply> SayHello(
             HelloRequest request, ServerCallContext context)
         {

@@ -11,6 +11,12 @@ namespace DynamicWebApi.Core.Extends
 {
     public static class GrpcServerExtension
     {
+        /// <summary>
+        /// 添加GrpcServer
+        /// </summary>
+        /// <param name="serviceCollection"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static IServiceCollection AddGrpcServer(this IServiceCollection serviceCollection, GrpcServerOptions options = null)
         {
             if (options == null)
@@ -26,6 +32,12 @@ namespace DynamicWebApi.Core.Extends
             return serviceCollection;
         }
 
+        /// <summary>
+        /// 添加Grpc服务
+        /// </summary>
+        /// <typeparam name="TServiceImp"></typeparam>
+        /// <param name="serviceCollection"></param>
+        /// <returns></returns>
         public static IServiceCollection AddGrpcService<TServiceImp>(this IServiceCollection serviceCollection) where TServiceImp:class
         {
             var server = serviceCollection.GetService<Server>();
@@ -47,6 +59,12 @@ namespace DynamicWebApi.Core.Extends
             return serviceCollection;
         }
 
+        /// <summary>
+        /// 添加Grpc客户端
+        /// </summary>
+        /// <typeparam name="TServiceClient"></typeparam>
+        /// <param name="serviceCollection"></param>
+        /// <returns></returns>
         public static IServiceCollection AddGrpcClient<TServiceClient>(this IServiceCollection serviceCollection) where TServiceClient:class
         {
             serviceCollection.AddTransient<TServiceClient>();

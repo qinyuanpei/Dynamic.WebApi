@@ -13,6 +13,9 @@ using DynamicWebApi.Core.Extends;
 using System.IO;
 using System.Reflection;
 using DynamicWebApi.Core.Services;
+using DynamicWebApi.Core.Services.Rpc.Greet;
+using static DynamicWebApi.Core.Services.Rpc.Greet.IGreetRpcService;
+using static DynamicWebApi.Core.Services.Rpc.User.IUserRpcService;
 
 namespace DynamicWebApi.Core
 {
@@ -57,12 +60,12 @@ namespace DynamicWebApi.Core
 
             //注册Grpc服务端
             services.AddGrpcServer()
-                .AddGrpcService<GreeterService>()
-                .AddGrpcService<UserService>();
+                .AddGrpcService<GreetRpcService>()
+                .AddGrpcService<UserRpcService>();
 
             //注册Grpc客户端
-            services.AddGrpcClient<GreetGrpc.GreeterGrpcService.GreeterGrpcServiceClient>();
-            services.AddGrpcClient<UserGrpc.UserGrpcService.UserGrpcServiceClient>();
+            services.AddGrpcClient<IGreetRpcServiceClient>();
+            services.AddGrpcClient<IUserRpcServiceClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

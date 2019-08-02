@@ -1,5 +1,4 @@
-﻿using GreetGrpc;
-using Grpc.Core;
+﻿using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

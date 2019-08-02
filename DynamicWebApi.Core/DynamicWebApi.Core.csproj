@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <Compile Remove="Services\CalculatorService.cs" />
+    <Compile Remove="Services\GreetService.cs" />
+    <Compile Remove="Services\UserService.cs" />
   </ItemGroup>
 
   <ItemGroup>

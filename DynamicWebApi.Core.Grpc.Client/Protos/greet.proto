@@ -1,12 +1,13 @@
 ﻿syntax = "proto3";
 
 //The namespace of csharp code
-//option csharp_namespace = "GreetGrpc"
+//DynamicWebApi.Core.Services.Rpc.Greet
+option csharp_namespace = "DynamicWebApi.Core.Client.Services.Rpc.Greet";
 
-package GreetGrpc;
+package GreetRpc;
 
 // The greeting service definition.
-service GreeterGrpcService {
+service IGreetRpcService {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply);
 }

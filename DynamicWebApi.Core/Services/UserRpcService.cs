@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
-using UserGrpc;
 using DynamicWebApi.Core.Extends;
+using DynamicWebApi.Core.Services.Rpc.User;
 
 namespace DynamicWebApi.Core.Services
 {
-    [GrpcServiceBind(typeof(UserGrpc.UserGrpcService))]
-    public class UserService : UserGrpc.UserGrpcService.UserGrpcServiceBase
+    /// <summary>
+    /// UserService(gRpc Based)
+    /// </summary>
+    [GrpcServiceBind(typeof(IUserRpcService))]
+    public class UserRpcService : IUserRpcService.IUserRpcServiceBase
     {
         private List<UserGrpcEdit> _users => GetMockUsers();
 

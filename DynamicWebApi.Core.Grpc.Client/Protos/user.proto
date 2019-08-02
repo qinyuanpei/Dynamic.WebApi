@@ -1,12 +1,12 @@
 ﻿syntax = "proto3";
 
 //The namespace of csharp code
-//option csharp_namespace = "UserGrpc"
+option csharp_namespace = "DynamicWebApi.Core.Client.Services.Rpc.User";
 
-package UserGrpc;
+package UserRpc;
 
 // The greeting service definition.
-service UserGrpcService {
+service IUserRpcService {
   // Sends a greeting
   rpc SaveUser (UserGrpcEdit) returns (RpcResponse){};
   rpc GetUser (UserGrpcQuery) returns (UserGrpcEdit){};

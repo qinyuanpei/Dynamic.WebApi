@@ -1,18 +1,23 @@
 ﻿using DynamicWebApi.Core.Extends;
-using GreetGrpc;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DynamicWebApi.Core.Services.Rpc.Greet;
 
 namespace DynamicWebApi.Core.Services
 {
     public class CoreMessageService : IDynamicController
     {
-        private GreeterGrpcService.GreeterGrpcServiceClient _client;
-        public CoreMessageService(GreeterGrpcService.GreeterGrpcServiceClient client)
+        private IGreetRpcService.IGreetRpcServiceClient _client;
+
+        /// <summary>
+        /// CoreMessage Service
+        /// </summary>
+        /// <param name="client"></param>
+        public CoreMessageService(IGreetRpcService.IGreetRpcServiceClient client)
         {
             _client = client;
         }

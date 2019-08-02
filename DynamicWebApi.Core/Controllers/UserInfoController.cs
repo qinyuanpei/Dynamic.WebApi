@@ -1,5 +1,5 @@
 ﻿using DynamicWebApi.Core.Extends;
-using GreetGrpc;
+using DynamicWebApi.Core.Services.Rpc.User;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,21 +12,21 @@ namespace DynamicWebApi.Core.Controllers
 {
     public class UserInfoController : IDynamicController
     {
-        private UserGrpc.UserGrpcService.UserGrpcServiceClient _client;
-        public UserInfoController(UserGrpc.UserGrpcService.UserGrpcServiceClient client)
+        private IUserRpcService.IUserRpcServiceClient _client;
+        public UserInfoController(IUserRpcService.IUserRpcServiceClient client)
         {
             _client = client;
         }
 
         [HttpGet("api/Users/{id}")]
-        public UserGrpc.UserGrpcEdit Get(int id)
+        public UserGrpcEdit Get(int id)
         {
-            var reply = _client.GetUser(new UserGrpc.UserGrpcQuery() { Uid = id });
+            var reply = _client.GetUser(new UserGrpcQuery() { Uid = id });
             return reply;
         }
 
         [HttpPost("api/Users/")]
-        public async Task<UserGrpc.RpcResponse> Post(UserGrpc.UserGrpcEdit userInfo)
+        public async Task<RpcResponse> Post(UserGrpcEdit userInfo)
         {
             var reply = await _client.SaveUserAsync(userInfo);
             return reply;
