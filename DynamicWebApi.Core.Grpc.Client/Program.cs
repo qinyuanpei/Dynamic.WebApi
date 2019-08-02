@@ -8,10 +8,10 @@ namespace DynamicWebApi.Core.Grpc.Client
     {
         static void Main(string[] args)
         {
-            var channel = new Channel("127.0.0.1:5000", ChannelCredentials.Insecure);
-            var client = new GreetGrpc.GreeterGrpcService.GreeterGrpcServiceClient(channel);
-            var reply = client.SayHello(new HelloRequest { Name = "PayneQin .NET Core Client" });
-            Console.WriteLine("来自" + reply.Message);
+            var channel = new Channel("localhost:2345", ChannelCredentials.Insecure);
+            var client = new UserGrpc.UserGrpcService.UserGrpcServiceClient(channel);
+            var reply = client.GetUser(new UserGrpc.UserGrpcQuery() { Uid = 1 });
+            Console.WriteLine("来自" + reply.Name);
 
             channel.ShutdownAsync().Wait();
             Console.WriteLine("任意键退出...");

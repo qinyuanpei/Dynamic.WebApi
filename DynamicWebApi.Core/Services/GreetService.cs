@@ -8,6 +8,7 @@ using GreetGrpc;
 
 namespace DynamicWebApi.Core.Services
 {
+    [GrpcServiceBind(typeof(GreetGrpc.GreeterGrpcService))]
     public class GreeterService : GreetGrpc.GreeterGrpcService.GreeterGrpcServiceBase
     {
         public override Task<HelloReply> SayHello(

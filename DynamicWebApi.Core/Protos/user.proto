@@ -8,8 +8,8 @@ package UserGrpc;
 // The greeting service definition.
 service UserGrpcService {
   // Sends a greeting
-  rpc SaveUser (UserGrpcEdit) returns (RpcResponse);
-  rpc GetUser (UserGrpcQuery) returns (UserGrpcEdit);
+  rpc SaveUser (UserGrpcEdit) returns (RpcResponse){};
+  rpc GetUser (UserGrpcQuery) returns (UserGrpcEdit){};
 }
 
 // The request message containing the user's name.

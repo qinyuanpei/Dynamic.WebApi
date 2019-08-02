@@ -12,25 +12,23 @@ namespace DynamicWebApi.Core.Controllers
 {
     public class UserInfoController : IDynamicController
     {
-        private Channel _channel;
-        public UserInfoController()
+        private UserGrpc.UserGrpcService.UserGrpcServiceClient _client;
+        public UserInfoController(UserGrpc.UserGrpcService.UserGrpcServiceClient client)
         {
-            _channel = new Channel("127.0.0.1:5000", ChannelCredentials.Insecure);
+            _client = client;
         }
 
         [HttpGet("api/Users/{id}")]
         public UserGrpc.UserGrpcEdit Get(int id)
         {
-            var client = new UserGrpc.UserGrpcService.UserGrpcServiceClient(_channel);
-            var reply = client.GetUser(new UserGrpc.UserGrpcQuery() { Uid = id });
+            var reply = _client.GetUser(new UserGrpc.UserGrpcQuery() { Uid = id });
             return reply;
         }
 
         [HttpPost("api/Users/")]
         public async Task<UserGrpc.RpcResponse> Post(UserGrpc.UserGrpcEdit userInfo)
         {
-            var client = new UserGrpc.UserGrpcService.UserGrpcServiceClient(_channel);
-            var reply = await client.SaveUserAsync(userInfo);
+            var reply = await _client.SaveUserAsync(userInfo);
             return reply;
         }
     }

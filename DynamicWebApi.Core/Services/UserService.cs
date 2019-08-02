@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using UserGrpc;
+using DynamicWebApi.Core.Extends;
 
 namespace DynamicWebApi.Core.Services
 {
+    [GrpcServiceBind(typeof(UserGrpc.UserGrpcService))]
     public class UserService : UserGrpc.UserGrpcService.UserGrpcServiceBase
     {
         private List<UserGrpcEdit> _users => GetMockUsers();

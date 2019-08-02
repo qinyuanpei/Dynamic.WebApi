@@ -13,7 +13,7 @@ namespace DynamicWebApi.Core.Extends
         {
             var type = typeInfo.AsType();
 
-            if(!typeof(IDynamicController).IsAssignableFrom(type)
+            if((!typeof(IDynamicController).IsAssignableFrom(type) && type.BaseType!=typeof(Microsoft.AspNetCore.Mvc.Controller))
                 || !typeInfo.IsPublic || typeInfo.IsAbstract || typeInfo.IsGenericType)
             {
                 return false;
