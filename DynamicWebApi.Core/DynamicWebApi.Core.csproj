@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Consul" Version="0.7.2.6" />
     <PackageReference Include="Google.Protobuf" Version="3.9.0" />
     <PackageReference Include="Grpc.Core" Version="1.22.0" />
     <PackageReference Include="Grpc.Tools" Version="1.22.0">

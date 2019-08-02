@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using Grpc.Core;
 using DynamicWebApi.Core.Services;
 using Microsoft.AspNetCore.Builder;
+using Consul;
+using Microsoft.Extensions.Configuration;
+using System.Net;
+using System.Net.Sockets;
 
 namespace DynamicWebApi.Core.Extends
 {
@@ -25,10 +29,7 @@ namespace DynamicWebApi.Core.Extends
             var server = new Server();
             var serverPort = new ServerPort(options.Host, options.Port, ServerCredentials.Insecure);
             server.Ports.Add(serverPort);
-            var channel = new Channel($"localhost:{options.Port}", credentials: ChannelCredentials.Insecure);
-
             serviceCollection.AddSingleton(typeof(Server), server);
-            serviceCollection.AddSingleton(typeof(Channel), channel);
             return serviceCollection;
         }
 
@@ -38,12 +39,12 @@ namespace DynamicWebApi.Core.Extends
         /// <typeparam name="TServiceImp"></typeparam>
         /// <param name="serviceCollection"></param>
         /// <returns></returns>
-        public static IServiceCollection AddGrpcService<TServiceImp>(this IServiceCollection serviceCollection) where TServiceImp:class
+        public static IServiceCollection AddGrpcService<TServiceImp>(this IServiceCollection serviceCollection) where TServiceImp : class
         {
             var server = serviceCollection.GetService<Server>();
             var serviceType = (typeof(TServiceImp).GetCustomAttributes(typeof(GrpcServiceBindAttribute), false)[0] as GrpcServiceBindAttribute).BindType;
             var bindMethod = serviceType.GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
-                .Where(m=>m.Name == "BindService" && m.ReturnType == typeof(ServerServiceDefinition)).FirstOrDefault();
+                .Where(m => m.Name == "BindService" && m.ReturnType == typeof(ServerServiceDefinition)).FirstOrDefault();
             if (bindMethod == null)
                 throw new Exception($"The specify service \"{serviceType.Name}\" is not a gRpc service with \"BindService()\"");
 
@@ -53,6 +54,9 @@ namespace DynamicWebApi.Core.Extends
             var serviceImp = serviceProvider.GetService<TServiceImp>();
             if (serviceImp == null)
                 throw new Exception($"The sprcift service \"{typeof(TServiceImp).Name}\" must be registered in DI container");
+
+            //注册Consul
+            RegisterConsul<TServiceImp>(server, serviceCollection).Wait();
 
             var serviceDefine = bindMethod.Invoke(null, new object[] { serviceImp }) as ServerServiceDefinition;
             server.Services.Add(serviceDefine);
@@ -65,10 +69,67 @@ namespace DynamicWebApi.Core.Extends
         /// <typeparam name="TServiceClient"></typeparam>
         /// <param name="serviceCollection"></param>
         /// <returns></returns>
-        public static IServiceCollection AddGrpcClient<TServiceClient>(this IServiceCollection serviceCollection) where TServiceClient:class
+        public static IServiceCollection AddGrpcClient<TServiceClient>(this IServiceCollection serviceCollection) where TServiceClient : class
         {
             serviceCollection.AddTransient<TServiceClient>();
             return serviceCollection;
+        }
+
+        public static IServiceCollection AddConsul(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+            {
+                var url = configuration.GetValue<string>("AppSettings:ConsulUrl");
+                consulConfig.Address = new Uri(url);
+            }));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Consul注册
+        /// </summary>
+        private static async Task<WriteResult> RegisterConsul<TServiceImp>(this Server server, IServiceCollection serviceCollection) where TServiceImp : class
+        {
+            var client = serviceCollection.GetService<IConsulClient>();
+            if (client == null)
+                throw new Exception("Please register ConsulClient before AddGrpcServer()");
+
+            var serverIP = GetLocalIP();
+            var serverPort = serviceCollection.GetService<IConfiguration>().GetValue<int>("AppSettings:Port");
+            var registerID = $"{typeof(TServiceImp).Name}({serverPort})";
+            await client.Agent.ServiceDeregister(registerID);
+            var result = await client.Agent.ServiceRegister(new AgentServiceRegistration()
+            {
+                ID = registerID,
+                Name = typeof(TServiceImp).Name,
+                Address = serverIP,
+                Port = serverPort,
+                Check = new AgentServiceCheck
+                {
+                    TCP = $"{serverIP}:{serverPort}",
+                    DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
+                    Interval = TimeSpan.FromSeconds(10),
+                    Timeout = TimeSpan.FromSeconds(5)
+                }
+            });
+
+            return result;
+        }
+
+        private static string GetLocalIP()
+        {
+            var hostName = Dns.GetHostName();
+            var ipEntry = Dns.GetHostEntry(hostName);
+            for (int i = 0; i < ipEntry.AddressList.Length; i++)
+            {
+                if (ipEntry.AddressList[i].AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ipEntry.AddressList[i].ToString();
+                }
+            }
+
+            return "127.0.0.1";
         }
 
         public static void UseGrpcServer(this IApplicationBuilder app)

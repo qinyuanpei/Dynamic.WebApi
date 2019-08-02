@@ -45,7 +45,7 @@ namespace DynamicWebApi.Core
             {
                 swagger.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info()
                 {
-                    Title = "DynamicController",
+                    Title = "Dynamic WebApi",
                     Version = "1.0",
                 });
 
@@ -58,6 +58,9 @@ namespace DynamicWebApi.Core
 
             services.AddDyanmicController();
 
+            //注册Consul
+            services.AddConsul(Configuration);
+
             //注册Grpc服务端
             services.AddGrpcServer()
                 .AddGrpcService<GreetRpcService>()
@@ -66,6 +69,9 @@ namespace DynamicWebApi.Core
             //注册Grpc客户端
             services.AddGrpcClient<IGreetRpcServiceClient>();
             services.AddGrpcClient<IUserRpcServiceClient>();
+
+            //注册服务发现组件
+            services.AddSingleton<IServiceDiscover, ServiceDiscover>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

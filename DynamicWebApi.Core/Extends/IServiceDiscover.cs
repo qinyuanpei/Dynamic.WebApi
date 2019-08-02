@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace DynamicWebApi.Core.Extends
 {
-    public class GrpcServiceBindAttribute : Attribute
+    interface IServiceDiscover
     {
-        public Type BindType { get; set; }
-        public Type ClientType { get; set; }
+        Task<object> FindServiceAsync<TRpcServiceImp>() where TRpcServiceImp : class;
     }
 }

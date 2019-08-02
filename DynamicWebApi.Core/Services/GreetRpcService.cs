@@ -11,7 +11,7 @@ namespace DynamicWebApi.Core.Services
     /// <summary>
     /// GreetService
     /// </summary>
-    [GrpcServiceBind(typeof(IGreetRpcService))]
+    [GrpcServiceBind(BindType = typeof(IGreetRpcService), ClientType = typeof(IGreetRpcService.IGreetRpcServiceClient))]
     public class GreetRpcService : IGreetRpcService.IGreetRpcServiceBase
     {
         /// <summary>

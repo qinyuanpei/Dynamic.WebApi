@@ -11,7 +11,7 @@ namespace DynamicWebApi.Core.Services
     /// <summary>
     /// UserService(gRpc Based)
     /// </summary>
-    [GrpcServiceBind(typeof(IUserRpcService))]
+    [GrpcServiceBind(BindType = typeof(IUserRpcService), ClientType = typeof(IUserRpcService.IUserRpcServiceClient))]
     public class UserRpcService : IUserRpcService.IUserRpcServiceBase
     {
         private List<UserGrpcEdit> _users => GetMockUsers();
