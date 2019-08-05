@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Winton.Extensions.Configuration.Consul;
+using System.Threading;
 
 namespace DynamicWebApi.Core
 {
@@ -14,7 +16,25 @@ namespace DynamicWebApi.Core
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var cts = new CancellationTokenSource();
+            CreateWebHostBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, builder) =>
+                {
+                    builder
+                        .AddConsul(
+                            "DynamicWebApi.Core/appsettings.json",
+                            cts.Token,
+                            options =>
+                            {
+                                options.ConsulConfigurationOptions = cco => { cco.Address = new Uri("http://127.0.0.1:8500"); };
+                                options.Optional = true;
+                                options.ReloadOnChange = true;
+                                options.OnLoadException = exceptionContext => { exceptionContext.Ignore = true; };
+                            })
+                        .AddEnvironmentVariables();
+                })
+                .Build()
+                .Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

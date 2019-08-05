@@ -23,12 +23,8 @@ namespace DynamicWebApi.Core
 {
     public class Startup
     {
-        //private CancellationTokenSource _cts = new CancellationTokenSource();
         public Startup(IConfiguration configuration)
         {
-            //var builder = new ConfigurationBuilder()
-            //    .AddConsul("DynamicWebApi.Core/appsettings.Development.json", _cts.Token);
-            //Configuration = builder.Build();
             Configuration = configuration;
         }
 
