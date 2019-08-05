@@ -16,13 +16,19 @@ using DynamicWebApi.Core.Services;
 using DynamicWebApi.Core.Services.Rpc.Greet;
 using static DynamicWebApi.Core.Services.Rpc.Greet.IGreetRpcService;
 using static DynamicWebApi.Core.Services.Rpc.User.IUserRpcService;
+using System.Threading;
+using Winton.Extensions.Configuration.Consul;
 
 namespace DynamicWebApi.Core
 {
     public class Startup
     {
+        //private CancellationTokenSource _cts = new CancellationTokenSource();
         public Startup(IConfiguration configuration)
         {
+            //var builder = new ConfigurationBuilder()
+            //    .AddConsul("DynamicWebApi.Core/appsettings.Development.json", _cts.Token);
+            //Configuration = builder.Build();
             Configuration = configuration;
         }
 
@@ -62,7 +68,8 @@ namespace DynamicWebApi.Core
             services.AddConsul(Configuration);
 
             //注册Grpc服务端
-            services.AddGrpcServer()
+            var gRpcServerPort = Configuration.GetValue<int>("AppSettings:Port");
+            services.AddGrpcServer(new GrpcServerOptions() { Host = "0.0.0.0", Port = gRpcServerPort })
                 .AddGrpcService<GreetRpcService>()
                 .AddGrpcService<UserRpcService>();
 
