@@ -67,8 +67,10 @@ namespace DynamicWebApi.Core
                 .AddGrpcService<UserRpcService>();
 
             //注册Grpc客户端
-            services.AddGrpcClient<IGreetRpcServiceClient>();
-            services.AddGrpcClient<IUserRpcServiceClient>();
+            services.AddGrpcClient<IGreetRpcServiceClient>(
+                new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
+            services.AddGrpcClient<IUserRpcServiceClient>(
+                new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
 
             //注册服务发现组件
             services.AddSingleton<IServiceDiscover, ServiceDiscover>();

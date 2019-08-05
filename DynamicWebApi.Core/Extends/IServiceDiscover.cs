@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DynamicWebApi.Core.Extends
 {
-    interface IServiceDiscover
+    public interface IServiceDiscover
     {
         Task<object> FindServiceAsync<TRpcServiceImp>() where TRpcServiceImp : class;
     }

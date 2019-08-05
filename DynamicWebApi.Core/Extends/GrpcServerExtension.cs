@@ -75,6 +75,30 @@ namespace DynamicWebApi.Core.Extends
             return serviceCollection;
         }
 
+        /// <summary>
+        /// 从指定Channel创建Grpc客户端
+        /// </summary>
+        /// <typeparam name="TServiceClient"></typeparam>
+        /// <param name="serviceCollection"></param>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddGrpcClient<TServiceClient>(this IServiceCollection serviceCollection, Channel channel) where TServiceClient : class
+        {
+            var clientType = typeof(TServiceClient);
+            var constructorInfo = clientType.GetConstructor(new Type[] { typeof(Channel) });
+            if (constructorInfo == null)
+                throw new Exception($"Please make sure {typeof(TServiceClient).Name} is a gRpc client");
+            var clientInstance = constructorInfo.Invoke(new object[] { channel });
+            serviceCollection.AddSingleton(typeof(TServiceClient), clientInstance);
+            return serviceCollection;
+        }
+
+        /// <summary>
+        /// 添加Consul
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static IServiceCollection AddConsul(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
@@ -91,7 +115,7 @@ namespace DynamicWebApi.Core.Extends
         /// </summary>
         private static async Task<WriteResult> RegisterConsul<TServiceImp>(this Server server, IServiceCollection serviceCollection) where TServiceImp : class
         {
-            var client = serviceCollection.GetService<IConsulClient>();
+            var client = serviceCollection.BuildServiceProvider().GetService<IConsulClient>();
             if (client == null)
                 throw new Exception("Please register ConsulClient before AddGrpcServer()");
 
@@ -111,7 +135,8 @@ namespace DynamicWebApi.Core.Extends
                     DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
                     Interval = TimeSpan.FromSeconds(10),
                     Timeout = TimeSpan.FromSeconds(5)
-                }
+                },
+                Tags = new string[] { "gRpc", ".NET Core", typeof(TServiceImp).Name.Replace("RpcService", "") }
             });
 
             return result;
@@ -132,6 +157,10 @@ namespace DynamicWebApi.Core.Extends
             return "127.0.0.1";
         }
 
+        /// <summary>
+        /// 启用Grpc服务端
+        /// </summary>
+        /// <param name="app"></param>
         public static void UseGrpcServer(this IApplicationBuilder app)
         {
             var server = app.ApplicationServices.GetService<Server>();
