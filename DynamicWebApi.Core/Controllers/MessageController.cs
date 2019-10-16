@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DynamicWebApi.Core.Controllers
 {
-    public class MessageController
+    public class MessageController : Controller
     {
         private readonly ILogger<MessageController> _logger;
         public MessageController(ILogger<MessageController> logger)

@@ -18,6 +18,12 @@ using static DynamicWebApi.Core.Services.Rpc.Greet.IGreetRpcService;
 using static DynamicWebApi.Core.Services.Rpc.User.IUserRpcService;
 using System.Threading;
 using Winton.Extensions.Configuration.Consul;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
+using Serilog.Extensions.Logging;
+using Serilog.Events;
+using WebApiContrib.Core.Formatter;
+using WebApiContrib.Core.Formatter.MessagePack;
 
 namespace DynamicWebApi.Core
 {
@@ -25,6 +31,15 @@ namespace DynamicWebApi.Core
     {
         public Startup(IConfiguration configuration)
         {
+            Log.Logger = new LoggerConfiguration()
+               .Enrich.FromLogContext()
+               .MinimumLevel.Debug()
+               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
+               {
+                   MinimumLogEventLevel = LogEventLevel.Verbose,
+                   AutoRegisterTemplate = true
+               })
+            .CreateLogger();
             Configuration = configuration;
         }
 
@@ -40,8 +55,8 @@ namespace DynamicWebApi.Core
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+            services.AddMvc().AddMessagePackFormatters().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMvcCore().AddApiExplorer();
             services.AddSwaggerGen(swagger =>
             {
