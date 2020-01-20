@@ -60,12 +60,12 @@ namespace DynamicWebApi.Core
 
             services.AddRazorPages();
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
-            //services.AddControllers().AddMessagePackFormatters().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddControllers().AddMessagePackFormatters().SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddControllersWithViews();
             services.AddMvc(opt => opt.EnableEndpointRouting = false).AddNewtonsoftJson();
-            //services.AddMvcCore().AddApiExplorer();
-            //services.AddOptions();
-            //services.AddMvc(opt => opt.EnableEndpointRouting = false);
+            services.AddMvcCore().AddApiExplorer();
+            services.AddOptions();
+            services.AddMvc(opt => opt.EnableEndpointRouting = false);
             //services.AddSwaggerGen(swagger =>
             //{
             //    swagger.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info()
@@ -92,11 +92,11 @@ namespace DynamicWebApi.Core
                 .AddGrpcService<GreetRpcService>()
                 .AddGrpcService<UserRpcService>();
 
-            ////注册Grpc客户端
-            //services.AddGrpcClient<IGreetRpcServiceClient>(
-            //    new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
-            //services.AddGrpcClient<IUserRpcServiceClient>(
-            //    new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
+            //注册Grpc客户端
+            services.AddGrpcClient<IGreetRpcServiceClient>(
+                new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
+            services.AddGrpcClient<IUserRpcServiceClient>(
+                new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
 
             //注册服务发现组件
             services.AddSingleton<IServiceDiscover, ServiceDiscover>();
