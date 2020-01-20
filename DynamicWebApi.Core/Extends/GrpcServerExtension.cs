@@ -120,7 +120,7 @@ namespace DynamicWebApi.Core.Extends
                 throw new Exception("Please register ConsulClient before AddGrpcServer()");
 
             var serverIP = GetLocalIP();
-            var serverPort = serviceCollection.GetService<IConfiguration>().GetValue<int>("AppSettings:Port");
+            var serverPort = serviceCollection.BuildServiceProvider().GetService<IConfiguration>().GetValue<int>("AppSettings:Port");
             var registerID = $"{typeof(TServiceImp).Name}({serverPort})";
             await client.Agent.ServiceDeregister(registerID);
             var result = await client.Agent.ServiceRegister(new AgentServiceRegistration()

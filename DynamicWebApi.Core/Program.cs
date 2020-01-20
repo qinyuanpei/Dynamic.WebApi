@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Winton.Extensions.Configuration.Consul;
 using System.Threading;
+using Microsoft.Extensions.Hosting;
 
 namespace DynamicWebApi.Core
 {
@@ -37,9 +38,15 @@ namespace DynamicWebApi.Core
                 .Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.ConfigureKestrel(serverOptions =>
+                {
+                    // Set properties and call methods on options
+                })
                 .UseStartup<Startup>();
-                
+            });
     }
 }

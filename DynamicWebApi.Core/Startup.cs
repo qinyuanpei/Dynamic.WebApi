@@ -24,6 +24,9 @@ using Serilog.Extensions.Logging;
 using Serilog.Events;
 using WebApiContrib.Core.Formatter;
 using WebApiContrib.Core.Formatter.MessagePack;
+using Microsoft.AspNetCore.HttpOverrides;
+using CSRedis;
+using Microsoft.Extensions.Hosting;
 
 namespace DynamicWebApi.Core
 {
@@ -55,23 +58,28 @@ namespace DynamicWebApi.Core
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddRazorPages();
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
-            services.AddMvc().AddMessagePackFormatters().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddMvcCore().AddApiExplorer();
-            services.AddSwaggerGen(swagger =>
-            {
-                swagger.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info()
-                {
-                    Title = "Dynamic WebApi",
-                    Version = "1.0",
-                });
+            //services.AddControllers().AddMessagePackFormatters().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddControllersWithViews();
+            services.AddMvc(opt => opt.EnableEndpointRouting = false).AddNewtonsoftJson();
+            //services.AddMvcCore().AddApiExplorer();
+            //services.AddOptions();
+            //services.AddMvc(opt => opt.EnableEndpointRouting = false);
+            //services.AddSwaggerGen(swagger =>
+            //{
+            //    swagger.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info()
+            //    {
+            //        Title = "Dynamic WebApi",
+            //        Version = "1.0",
+            //    });
 
-                swagger.DocInclusionPredicate((docName, description) => true);
+            //    swagger.DocInclusionPredicate((docName, description) => true);
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                swagger.IncludeXmlComments(xmlPath);
-            });
+            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //    swagger.IncludeXmlComments(xmlPath);
+            //});
 
             services.AddDyanmicController();
 
@@ -84,19 +92,29 @@ namespace DynamicWebApi.Core
                 .AddGrpcService<GreetRpcService>()
                 .AddGrpcService<UserRpcService>();
 
-            //注册Grpc客户端
-            services.AddGrpcClient<IGreetRpcServiceClient>(
-                new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
-            services.AddGrpcClient<IUserRpcServiceClient>(
-                new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
+            ////注册Grpc客户端
+            //services.AddGrpcClient<IGreetRpcServiceClient>(
+            //    new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
+            //services.AddGrpcClient<IUserRpcServiceClient>(
+            //    new Grpc.Core.Channel("172.16.100.24:2345", Grpc.Core.ChannelCredentials.Insecure));
 
             //注册服务发现组件
             services.AddSingleton<IServiceDiscover, ServiceDiscover>();
+
+            //注册CSRedis
+            services.AddSingleton<CSRedisClient>(x =>
+            {
+                return new CSRedisClient("127.0.0.1,defaultDatabase=0,poolsize=3,tryit=0");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -108,19 +126,22 @@ namespace DynamicWebApi.Core
                 app.UseHsts();
             }
 
+            app.UseRouting();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            //});
+            app.UseEndpoints(endpoints =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
             app.UseGrpcServer();
         }

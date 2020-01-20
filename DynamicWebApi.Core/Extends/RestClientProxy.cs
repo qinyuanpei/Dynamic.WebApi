@@ -8,10 +8,10 @@ namespace DynamicWebApi.Core.Extends
 {
     public class RestClientProxy
     {
-        public static TService Create<TService>(string baseUrl)
-        {
-            return ProxyGenerator.Create<TService, RestClientInterceptor>();
-        }
+        //public static TService Create<TService>(string baseUrl)
+        //{
+        //    return ProxyGenerator.Create<TService, RestClientInterceptor>();
+        //}
     }
 }
 
