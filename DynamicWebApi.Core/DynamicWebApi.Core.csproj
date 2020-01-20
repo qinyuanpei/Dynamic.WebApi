@@ -7,6 +7,10 @@
     <StartupObject />
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp3.1\DynamicWebApi.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Services\CalculatorService.cs" />
     <Compile Remove="Services\GreetService.cs" />

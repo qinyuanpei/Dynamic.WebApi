@@ -27,6 +27,7 @@ using WebApiContrib.Core.Formatter.MessagePack;
 using Microsoft.AspNetCore.HttpOverrides;
 using CSRedis;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace DynamicWebApi.Core
 {
@@ -66,20 +67,16 @@ namespace DynamicWebApi.Core
             services.AddMvcCore().AddApiExplorer();
             services.AddOptions();
             services.AddMvc(opt => opt.EnableEndpointRouting = false);
-            //services.AddSwaggerGen(swagger =>
-            //{
-            //    swagger.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info()
-            //    {
-            //        Title = "Dynamic WebApi",
-            //        Version = "1.0",
-            //    });
+            services.AddSwaggerGen(swagger =>
+            {
+                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "ynamic WebApi", Version = "v1.0" });
 
-            //    swagger.DocInclusionPredicate((docName, description) => true);
+                swagger.DocInclusionPredicate((docName, description) => true);
 
-            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            //    swagger.IncludeXmlComments(xmlPath);
-            //});
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                swagger.IncludeXmlComments(xmlPath);
+            });
 
             services.AddDyanmicController();
 
@@ -130,11 +127,11 @@ namespace DynamicWebApi.Core
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            //});
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
